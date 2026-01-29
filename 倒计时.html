@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>倒计时</title>
+  <style>
+    body {
+      font-family: "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 15px;
+      color: #222;
+    }
+    h1 { text-align: center; margin-bottom: 8px; }
+    p.subtitle { text-align: center; color: #555; margin-top: -8px; }
+    .event {
+      border-bottom: 1px solid #ddd;
+      padding: 18px 0;
+    }
+    .title {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    .countdown {
+      font-size: 1.2rem;
+      color: #007aff;
+      margin: 8px 0;
+    }
+    .note {
+      color: #444;
+      font-size: 1rem;
+    }
+    .progress {
+      font-size: 0.9rem;
+      color: #999;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>倒计时</h1>
+<p class="subtitle">记录每一个值得期待的日子，为奋斗的生活增添一份期待与色彩</p>
+
+<div id="events-container"></div>
+
+<script>
+  // —— 可自定义倒计时列表 —— //
+  const events = [
+    {
+      title: "春节放假",
+      target:  "2026-02-14 20:00:00",
+      note: "下班吃点好的，回家好好睡一觉。"
+    },
+    {
+      title: "春节回来",
+      target: "2026-02-23 11:00:00",
+      note: "给自己准备一份新年礼物，迎接新的循环。"
+    },
+    {
+      title: "努力打气",
+      target: "2026-03-01 20:00:00",
+      note: "再苦也只有几天看，回家的路永远值得。"
+    }
+    // 可增加更多事件
+  ];
+
+  const container = document.getElementById("events-container");
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+
+    container.innerHTML = ""; // 清空旧内容
+
+    events.forEach(ev => {
+      const targetTime = new Date(ev.target).getTime();
+      const diff = targetTime - now;
+
+      let days = 0, hours = 0, mins = 0, secs = 0, percent = 0;
+      if (diff > 0) {
+        days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        secs = Math.floor((diff % (1000 * 60)) / 1000);
+        // 进度比例（从现在到目标比一年比例，取值示例）
+        const total = targetTime - now;
+        percent = ((1 - diff / total) * 100).toFixed(1);
+      }
+
+      container.innerHTML += `
+        <div class="event">
+          <div class="title">${ev.title}</div>
+          <div class="countdown">
+            ${days} 天 ${hours} 小时 ${mins} 分钟 ${secs} 秒
+          </div>
+          <div class="note">${ev.note}</div>
+        </div>
+      `;
+    });
+  }
+
+  // 每秒刷新
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>
+
+</body>
+</html>
